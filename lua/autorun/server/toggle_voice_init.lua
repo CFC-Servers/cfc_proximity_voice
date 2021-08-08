@@ -30,7 +30,7 @@ end
 hook.Add( "PlayerCanHearPlayersVoice", "CFC_ToggleLocalVoice_CanHear", function( listener, speaker )
 	if not forceLocalVoice and not playerConfig[listener] then return end
 
-    return canHear( listener, speaker ), config.Chat.VOICE_3D
+    return canHear( listener, speaker ), config.VOICE_3D
 end)
 
 
