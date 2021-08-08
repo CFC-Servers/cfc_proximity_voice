@@ -1,13 +1,22 @@
-local forceLocalVoiceConvar = CreateConVar( "force_local_voice", "0", 0, "force everyone to use local voice")
+local forceLocalVoiceConvar = CreateConVar( "force_proximity_voice", "0", 0, "force everyone to use local voice")
 forceLocalVoice = forceLocalVoiceConvar:GetBool()
 
-cvars.AddChangeCallback("force_local_voice", function(convarName, valueOld, valueNew)
-	foreLocalVoice = forceLocalVoiceConvar:GetBool()
+cvars.AddChangeCallback("force_proximity_voice", function(convarName, valueOld, valueNew)
+    forceLocalVoice = forceLocalVoiceConvar:GetBool()
+    if forceLocalVoice then
+        msg = "Forced proximity voice enabled!"	
+    else
+        msg = "Forced proximity voice disabled!"
+    end
+
+    for _, ply in ipairs( player.GetAll() ) do
+        ply:ChatPrint( msg )
+    end
 end)
 
 local config = {
-	CHAT_DISTANCE = 750,
-	VOICE_3D = true
+    CHAT_DISTANCE = 1000,
+    VOICE_3D = true
 }
 
 local playerConfig = {}
@@ -28,16 +37,20 @@ local function canHear( listener, speaker )
 end
 
 hook.Add( "PlayerCanHearPlayersVoice", "CFC_ToggleLocalVoice_CanHear", function( listener, speaker )
-	if not forceLocalVoice and not playerConfig[listener] then return end
+    local shouldUseLocal = forceLocalVoice or playerConfig[listener] or playerConfig[speaker]
+    if not shouldUseLocal then return end
 
     return canHear( listener, speaker ), config.VOICE_3D
 end)
 
 
 concommand.Add("enable_local_voice", function(ply)
-	playerConfig[ply] = true
+    ply:ChatPrint( "Proximity voice enabled!")
+    playerConfig[ply] = true
 end)
 
 concommand.Add("disable_local_voice", function(ply)
-	playerConfig[ply] = nil
+    ply:ChatPrint( "Proximity voice disabled!")
+    playerConfig[ply] = nil
 end)
+
