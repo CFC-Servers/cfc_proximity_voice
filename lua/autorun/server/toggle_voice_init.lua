@@ -20,7 +20,7 @@ local function canHear( listener, speaker )
     local speakerPos = speaker:GetPos()
     local listenerPos = listener:GetPos()
 
-    if listenerPos:DistToSqr( speakerPos ) > GAMEMODE.Config.Chat.CHAT_DISTANCE ^ 2 then
+    if listenerPos:DistToSqr( speakerPos ) > config.CHAT_DISTANCE ^ 2 then
         return false
     end
 
