@@ -44,12 +44,12 @@ hook.Add( "PlayerCanHearPlayersVoice", "CFC_ToggleLocalVoice_CanHear", function(
 end)
 
 
-concommand.Add("enable_local_voice", function(ply)
+concommand.Add("enable_proximity_voice", function(ply)
     ply:ChatPrint( "Proximity voice enabled!")
     playerConfig[ply] = true
 end)
 
-concommand.Add("disable_local_voice", function(ply)
+concommand.Add("disable_proximity_voice", function(ply)
     ply:ChatPrint( "Proximity voice disabled!")
     playerConfig[ply] = nil
 end)
