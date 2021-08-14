@@ -8,15 +8,15 @@ end)
 
 local function populatePanel( form )
 	local checkbox = form:CheckBox( "Enable Proximity Voice", "proximity_voice_enabled" )
-  checkbox:SetChecked( convar:GetBool() )
+	checkbox:SetChecked( convar:GetBool() )
 end
 
 hook.Add( "AddToolMenuCategories", "CFC_OptionalAddons_AddMenuCategory", function()
-  spawnmenu.AddToolCategory( "Options", "CFC", "Proximity Voice" )
+	spawnmenu.AddToolCategory( "Options", "CFC", "Proximity Voice" )
 end )
 
 hook.Add( "PopulateToolMenu", "CFC_OptionalAddons_CreateOptionsMenu", function()
-  spawnmenu.AddToolMenuOption( "Options", "CFC", "proximity_voice", "Proximity Voice", "", "", function( panel )
-	  populatePanel( panel )
-  end )
+	spawnmenu.AddToolMenuOption( "Options", "CFC", "proximity_voice", "Proximity Voice", "", "", function( panel )
+		populatePanel( panel )
+	end )
 end )
