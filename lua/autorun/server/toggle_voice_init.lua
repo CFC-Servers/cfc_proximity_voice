@@ -48,8 +48,8 @@ hook.Add( "PlayerDisconnected", "CFC_ProximityVoice_CleanupTables", function(ply
     playerConfig[ply] = nil
 end )
 
-util.AddNetworkString( "proximity_voice_changed" )
-net.Receive( "proximity_voice_changed", function( len, ply )
+util.AddNetworkString( "proximity_voice_enabled_changed" )
+net.Receive( "proximity_voice_enabled_changed", function( len, ply )
     local enabled = net.ReadBool()
     playerConfig[ply] = enabled or nil
 end )
