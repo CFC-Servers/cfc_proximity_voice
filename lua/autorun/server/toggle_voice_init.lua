@@ -13,7 +13,7 @@ cvars.AddChangeCallback("force_proximity_voice", function(convarName, valueOld, 
     for _, ply in ipairs( player.GetAll() ) do
         ply:ChatPrint( msg )
     end
-end)
+end, "force_proximity_voice_callback")
 
 local config = {
     CHAT_DISTANCE = 1000,
