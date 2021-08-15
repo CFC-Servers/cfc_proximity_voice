@@ -1,4 +1,5 @@
-local forceLocalVoiceConvar = CreateConVar( "force_proximity_voice", "0", 0, "force everyone to use local voice")
+local forceLocalVoiceConvar = CreateConVar("force_proximity_voice", "0", 0,
+                                           "force everyone to use local voice")
 forceLocalVoice = forceLocalVoiceConvar:GetBool()
 
 cvars.AddChangeCallback("force_proximity_voice", function(convarName, valueOld, valueNew)
@@ -43,14 +44,12 @@ hook.Add( "PlayerCanHearPlayersVoice", "CFC_ToggleLocalVoice_CanHear", function(
     return canHear( listener, speaker ), config.VOICE_3D
 end)
 
-
-concommand.Add("enable_proximity_voice", function(ply)
-    ply:ChatPrint( "Proximity voice enabled!")
-    playerConfig[ply] = true
-end)
-
-concommand.Add("disable_proximity_voice", function(ply)
-    ply:ChatPrint( "Proximity voice disabled!")
+hook.Add( "PlayerDisconnected", "CFC_ProximityVoice_CleanupTables", function(ply)
     playerConfig[ply] = nil
-end)
+end )
 
+util.AddNetworkString( "proximity_voice_changed" )
+net.Receive( "proximity_voice_changed", function( len, ply )
+    local enabled = net.ReadBool()
+    playerConfig[ply] = enabled or nil
+end )
