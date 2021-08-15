@@ -44,6 +44,9 @@ hook.Add( "PlayerCanHearPlayersVoice", "CFC_ToggleLocalVoice_CanHear", function(
     return canHear( listener, speaker ), config.VOICE_3D
 end)
 
+hook.Add( "PlayerDisconnected", "CFC_ProximityVoice_CleanupTables", function(ply)
+    playerConfig[ply] = nil
+end )
 
 util.AddNetworkString( "proximity_voice_changed" )
 net.Receive( "proximity_voice_changed", function( len, ply )
