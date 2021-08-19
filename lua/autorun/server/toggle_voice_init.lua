@@ -21,6 +21,7 @@ local config = {
 }
 
 local playerConfig = {}
+local playerConfigOverride = {}
 
 local function canHear( listener, speaker )
     if not listener:Alive() or not speaker:Alive() then
@@ -37,8 +38,15 @@ local function canHear( listener, speaker )
     return true
 end
 
+function ProximityVoiceOverridePlayerConfig( ply, enabled ) 
+    playerConfigOverride[ply] = enabled
+    if not enabled then
+        playerConfigOverride[ply] = true
+    end
+end
+
 hook.Add( "PlayerCanHearPlayersVoice", "CFC_ToggleLocalVoice_CanHear", function( listener, speaker )
-    local shouldUseLocal = forceLocalVoice or playerConfig[listener] or playerConfig[speaker]
+    local shouldUseLocal = forceLocalVoice or playerConfig[listener] or playerConfig[speaker] or playerConfigOverride[listener] or playerConfigOverride[speaker]
     if not shouldUseLocal then return end
 
     return canHear( listener, speaker ), config.VOICE_3D
@@ -46,6 +54,7 @@ end)
 
 hook.Add( "PlayerDisconnected", "CFC_ProximityVoice_CleanupTables", function(ply)
     playerConfig[ply] = nil
+    playerConfigOverride[ply] = true
 end )
 
 util.AddNetworkString( "proximity_voice_enabled_changed" )

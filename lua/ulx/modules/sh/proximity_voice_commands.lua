@@ -12,3 +12,15 @@ proximityGlobal:addParam{ type=ULib.cmds.BoolArg, invisible=true }
 proximityGlobal:defaultAccess( ULib.ACCESS_ADMIN )
 proximityGlobal:help( "Enabled proximity voice for everyone" )
 proximityGlobal:setOpposite( "ulx disableproximityvoice", {nil, true} )
+
+
+local function proximityVoiceOverride( caller, targets, enabled )
+    for _, ply in pairs( targets ) do
+        ProximityVoiceOverridePlayerConfig( ply, enabled )
+    end
+end
+local proximityOverride = ulx.command( CATEGORY_NAME, "ulx overrideproximityvoice", proximityVoiceOverride )
+proximityOverride:addParam{ type=ULib.cmds.PlayersArg }
+proximityOverride:addParam{ type=ULib.cmds.BoolArg }
+proximityOverride:defaultAccess( ULib.ACCESS_ADMIN )
+proximityOverride:help( "Enabled proximity voice for everyone" )
