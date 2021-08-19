@@ -41,7 +41,7 @@ end
 function ProximityVoiceOverridePlayerConfig( ply, enabled ) 
     playerConfigOverride[ply] = enabled
     if not enabled then
-        playerConfigOverride[ply] = true
+        playerConfigOverride[ply] = nil
     end
 end
 
