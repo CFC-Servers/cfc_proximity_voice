@@ -15,7 +15,7 @@ proximityGlobal:setOpposite( "ulx disableproximityvoice", {nil, true} )
 
 
 local function proximityVoiceOverride( caller, targets, enabled )
-    for _, ply in pairs( targets ) do
+    for _, ply in ipairs( targets ) do
         ProximityVoiceOverridePlayerConfig( ply, enabled )
     end
 
