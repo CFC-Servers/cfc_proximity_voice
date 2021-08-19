@@ -19,7 +19,7 @@ local function proximityVoiceOverride( caller, targets, enabled )
         ProximityVoiceOverridePlayerConfig( ply, enabled )
     end
 
-    local word = enabled or "disabled" and "enabled"
+    local word = enabled and "disabled" or "enabled"
     ulx.fancyLogAdmin( caller, "#A #s proximity voice for #T", word, targets )
 end
 local proximityOverride = ulx.command( CATEGORY_NAME, "ulx overrideproximityvoice", proximityVoiceOverride )
