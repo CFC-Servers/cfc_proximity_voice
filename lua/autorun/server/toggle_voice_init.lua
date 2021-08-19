@@ -54,7 +54,7 @@ end)
 
 hook.Add( "PlayerDisconnected", "CFC_ProximityVoice_CleanupTables", function(ply)
     playerConfig[ply] = nil
-    playerConfigOverride[ply] = true
+    playerConfigOverride[ply] = nil
 end )
 
 util.AddNetworkString( "proximity_voice_enabled_changed" )
