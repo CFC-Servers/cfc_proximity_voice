@@ -5,7 +5,7 @@ forceLocalVoice = forceLocalVoiceConvar:GetBool()
 cvars.AddChangeCallback("force_proximity_voice", function(convarName, valueOld, valueNew)
     forceLocalVoice = forceLocalVoiceConvar:GetBool()
     if forceLocalVoice then
-        msg = "Forced proximity voice enabled!"	
+        msg = "Forced proximity voice enabled!"
     else
         msg = "Forced proximity voice disabled!"
     end
@@ -38,7 +38,7 @@ local function canHear( listener, speaker )
     return true
 end
 
-function ProximityVoiceOverridePlayerConfig( ply, enabled ) 
+function ProximityVoiceOverridePlayerConfig( ply, enabled )
     playerConfigOverride[ply] = enabled
     if not enabled then
         playerConfigOverride[ply] = nil
@@ -50,7 +50,7 @@ hook.Add( "PlayerCanHearPlayersVoice", "CFC_ToggleLocalVoice_CanHear", function(
     if not shouldUseLocal then return end
 
     return canHear( listener, speaker ), config.VOICE_3D
-end)
+end, HOOK_MONITOR_LOW )
 
 hook.Add( "PlayerDisconnected", "CFC_ProximityVoice_CleanupTables", function(ply)
     playerConfig[ply] = nil
