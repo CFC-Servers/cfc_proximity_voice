@@ -50,7 +50,7 @@ hook.Add( "PlayerCanHearPlayersVoice", "CFC_ToggleLocalVoice_CanHear", function(
     if not shouldUseLocal then return end
 
     return canHear( listener, speaker ), config.VOICE_3D
-end, HOOK_MONITOR_LOW )
+end, HOOK_LOW )
 
 hook.Add( "PlayerDisconnected", "CFC_ProximityVoice_CleanupTables", function(ply)
     playerConfig[ply] = nil
