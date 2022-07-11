@@ -53,7 +53,7 @@ hook.Add( "PlayerCanHearPlayersVoice", "CFC_ToggleLocalVoice_CanHear", function(
     return canHear( listener, speaker ), config.VOICE_3D
 end, HOOK_LOW )
 
-hook.Add( "PlayerDisconnected", "CFC_ProximityVoice_CleanupTables", function(ply)
+hook.Add( "PlayerDisconnected", "CFC_ProximityVoice_CleanupTables", function( ply )
     playerConfig[ply] = nil
     playerConfigOverride[ply] = nil
 end )
