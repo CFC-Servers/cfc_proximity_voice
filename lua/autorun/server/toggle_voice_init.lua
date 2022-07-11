@@ -17,7 +17,7 @@ end, "force_proximity_voice_callback" )
 
 local config = {
     CHAT_DISTANCE = 1000,
-    VOICE_3D = true
+    VOICE_3D = false
 }
 
 local playerConfig = {}
@@ -30,8 +30,9 @@ local function canHear( listener, speaker )
 
     local speakerPos = speaker:GetPos()
     local listenerPos = listener:GetPos()
+    local playerRange = playerConfig.range or 1000
 
-    if listenerPos:DistToSqr( speakerPos ) > config.CHAT_DISTANCE ^ 2 then
+    if listenerPos:DistToSqr( speakerPos ) > playerRange ^ 2 then
         return false
     end
 
@@ -57,8 +58,31 @@ hook.Add( "PlayerDisconnected", "CFC_ProximityVoice_CleanupTables", function(ply
     playerConfigOverride[ply] = nil
 end )
 
+util.AddNetworkString( "proximity_voice_settings_changed" )
+net.Receive( "proximity_voice_settings_changed", function( len, ply )
+    local enabled = net.ReadBool()
+    local range = net.ReadInt( 13 )
+
+    playerConfig[ply] = playerConfig[ply] or {}
+    playerConfig[ply] = {
+        enabled = enabled or nil,
+        range = range or 1000,
+    }
+end )
+
 util.AddNetworkString( "proximity_voice_enabled_changed" )
 net.Receive( "proximity_voice_enabled_changed", function( len, ply )
     local enabled = net.ReadBool()
-    playerConfig[ply] = enabled or nil
+
+    playerConfig[ply] = playerConfig[ply] or {}
+    playerConfig[ply].enabled = enabled or nil
+end )
+
+util.AddNetworkString( "proximity_voice_range_changed" )
+net.Receive( "proximity_voice_range_changed", function( len, ply )
+    local range = net.ReadInt( 13 )
+    playerConfig[ply] = playerConfig[ply] or {}
+
+    playerConfig[ply].range = range or 1000
+    print( playerConfig[ply].range )
 end )
