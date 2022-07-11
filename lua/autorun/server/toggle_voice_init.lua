@@ -19,7 +19,7 @@ local playerConfig = {}
 local playerConfigOverride = {}
 
 local function canHear( listener, speaker )
-    if not config.HEAR_DEAD and ( not listener:Alive() or not speaker:Alive() ) then
+    if not playerConfig.headDead and ( not listener:Alive() or not speaker:Alive() ) then
         return false
     end
 
