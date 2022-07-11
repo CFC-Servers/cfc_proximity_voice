@@ -16,15 +16,15 @@ cvars.AddChangeCallback( "force_proximity_voice", function( convarName, valueOld
 end, "force_proximity_voice_callback" )
 
 local config = {
-    CHAT_DISTANCE = 1000,
-    VOICE_3D = false
+    VOICE_3D = false,
+    HEAR_DEAD = true,
 }
 
 local playerConfig = {}
 local playerConfigOverride = {}
 
 local function canHear( listener, speaker )
-    if not listener:Alive() or not speaker:Alive() then
+    if not config.HEAR_DEAD and ( not listener:Alive() or not speaker:Alive() ) then
         return false
     end
 
