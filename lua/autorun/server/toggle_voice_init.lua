@@ -84,5 +84,4 @@ net.Receive( "proximity_voice_range_changed", function( len, ply )
     playerConfig[ply] = playerConfig[ply] or {}
 
     playerConfig[ply].range = range or 1000
-    print( playerConfig[ply].range )
 end )
