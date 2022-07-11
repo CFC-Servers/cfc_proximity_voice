@@ -1,8 +1,8 @@
-local forceLocalVoiceConvar = CreateConVar("force_proximity_voice", "0", 0,
-                                           "force everyone to use local voice")
+local forceLocalVoiceConvar = CreateConVar( "force_proximity_voice", "0", 0,
+                                            "force everyone to use local voice" )
 forceLocalVoice = forceLocalVoiceConvar:GetBool()
 
-cvars.AddChangeCallback("force_proximity_voice", function(convarName, valueOld, valueNew)
+cvars.AddChangeCallback( "force_proximity_voice", function( convarName, valueOld, valueNew )
     forceLocalVoice = forceLocalVoiceConvar:GetBool()
     if forceLocalVoice then
         msg = "Forced proximity voice enabled!"
@@ -13,7 +13,7 @@ cvars.AddChangeCallback("force_proximity_voice", function(convarName, valueOld, 
     for _, ply in ipairs( player.GetAll() ) do
         ply:ChatPrint( msg )
     end
-end, "force_proximity_voice_callback")
+end, "force_proximity_voice_callback" )
 
 local config = {
     CHAT_DISTANCE = 1000,

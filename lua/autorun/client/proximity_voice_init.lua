@@ -1,9 +1,9 @@
 local convar = CreateClientConVar( "proximity_voice_enabled", "0", true, true )
 cvars.AddChangeCallback( "proximity_voice_enabled", function( name, old, new )
     net.Start( "proximity_voice_enabled_changed" )
-        net.WriteBool( tobool(new) )
+        net.WriteBool( tobool( new ) )
     net.SendToServer()
-end)
+end )
 
 
 local function populatePanel( form )
@@ -25,4 +25,4 @@ hook.Add( "InitPostEntity", "CFC_ProximityVoice_SendConfigToServer", function()
     net.Start( "proximity_voice_enabled_changed" )
         net.WriteBool( convar:GetBool() )
     net.SendToServer()
-end)
+end )
