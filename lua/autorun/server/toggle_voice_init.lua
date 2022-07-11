@@ -15,11 +15,6 @@ cvars.AddChangeCallback( "force_proximity_voice", function( convarName, valueOld
     end
 end, "force_proximity_voice_callback" )
 
-local config = {
-    VOICE_3D = false,
-    HEAR_DEAD = true,
-}
-
 local playerConfig = {}
 local playerConfigOverride = {}
 
@@ -61,11 +56,15 @@ end )
 util.AddNetworkString( "proximity_voice_settings_changed" )
 net.Receive( "proximity_voice_settings_changed", function( len, ply )
     local enabled = net.ReadBool()
+    local hearDead = net.ReadBool()
+    local hear3D = net.ReadBool()
     local range = net.ReadInt( 13 )
 
     playerConfig[ply] = playerConfig[ply] or {}
     playerConfig[ply] = {
         enabled = enabled or nil,
+        hearDead = hearDead or nil,
+        hear3D = hear3D or nil,
         range = range or 1000,
     }
 end )
@@ -76,6 +75,22 @@ net.Receive( "proximity_voice_enabled_changed", function( len, ply )
 
     playerConfig[ply] = playerConfig[ply] or {}
     playerConfig[ply].enabled = enabled or nil
+end )
+
+util.AddNetworkString( "proximity_voice_hear_dead_changed" )
+net.Receive( "proximity_voice_hear_dead_changed", function( len, ply )
+    local hearDead = net.ReadBool()
+
+    playerConfig[ply] = playerConfig[ply] or {}
+    playerConfig[ply].hearDead = hearDead or nil
+end )
+
+util.AddNetworkString( "proximity_voice_3D_changed" )
+net.Receive( "proximity_voice_3D_changed", function( len, ply )
+    local hear3D = net.ReadBool()
+
+    playerConfig[ply] = playerConfig[ply] or {}
+    playerConfig[ply].hear3D = hear3D or nil
 end )
 
 util.AddNetworkString( "proximity_voice_range_changed" )
