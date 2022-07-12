@@ -42,7 +42,9 @@ function ProximityVoiceOverridePlayerConfig( ply, enabled )
 end
 
 hook.Add( "PlayerCanHearPlayersVoice", "CFC_ToggleLocalVoice_CanHear", function( listener, speaker )
-    local isPlayerConfig = playerConfig[listener].enabled or playerConfig[speaker].enabled
+    local cfgListener = playerConfig[listener] or {}
+    local cfgSpeaker = playerConfig[listener] or {}
+    local isPlayerConfig = cfgListener.enabled or cfgSpeaker.enabled
     local isOverrideConfig = playerConfigOverride[listener] or playerConfigOverride[speaker]
 
     local shouldUseLocal = forceLocalVoice or isPlayerConfig or isOverrideConfig
