@@ -19,13 +19,13 @@ local playerConfig = {}
 local playerConfigOverride = {}
 
 local function canHear( listener, speaker )
-    if not playerConfig.headDead and ( not listener:Alive() or not speaker:Alive() ) then
+    if not playerConfig[listener].hearDead and ( not listener:Alive() or not speaker:Alive() ) then
         return false
     end
 
     local speakerPos = speaker:GetPos()
     local listenerPos = listener:GetPos()
-    local playerRange = playerConfig.range or 1000
+    local playerRange = playerConfig[listener].range or 1000
 
     if listenerPos:DistToSqr( speakerPos ) > playerRange ^ 2 then
         return false
@@ -42,10 +42,13 @@ function ProximityVoiceOverridePlayerConfig( ply, enabled )
 end
 
 hook.Add( "PlayerCanHearPlayersVoice", "CFC_ToggleLocalVoice_CanHear", function( listener, speaker )
-    local shouldUseLocal = forceLocalVoice or playerConfig[listener] or playerConfig[speaker] or playerConfigOverride[listener] or playerConfigOverride[speaker]
+    local isPlayerConfig = playerConfig[listener].enabled or playerConfig[speaker].enabled
+    local isOverrideConfig = playerConfigOverride[listener] or playerConfigOverride[speaker]
+
+    local shouldUseLocal = forceLocalVoice or isPlayerConfig or isOverrideConfig
     if not shouldUseLocal then return end
 
-    return canHear( listener, speaker ), playerConfig.hear3D
+    return canHear( listener, speaker ), playerConfig[listener].hear3D
 end, HOOK_LOW )
 
 hook.Add( "PlayerDisconnected", "CFC_ProximityVoice_CleanupTables", function( ply )
@@ -62,9 +65,9 @@ net.Receive( "proximity_voice_settings_changed", function( len, ply )
 
     playerConfig[ply] = playerConfig[ply] or {}
     playerConfig[ply] = {
-        enabled = enabled or nil,
-        hearDead = hearDead or nil,
-        hear3D = hear3D or nil,
+        enabled = enabled,
+        hearDead = hearDead,
+        hear3D = hear3D,
         range = range or 1000,
     }
 end )
@@ -96,7 +99,7 @@ end )
 util.AddNetworkString( "proximity_voice_range_changed" )
 net.Receive( "proximity_voice_range_changed", function( len, ply )
     local range = net.ReadInt( 13 )
-    playerConfig[ply] = playerConfig[ply] or {}
 
+    playerConfig[ply] = playerConfig[ply] or {}
     playerConfig[ply].range = range or 1000
 end )
