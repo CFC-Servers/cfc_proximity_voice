@@ -1,3 +1,5 @@
+local lastWrite
+
 local convarEnabled = CreateClientConVar( "proximity_voice_enabled", "0", true, true )
 cvars.AddChangeCallback( "proximity_voice_enabled", function( name, old, new )
     net.Start( "proximity_voice_enabled_changed" )
@@ -21,9 +23,11 @@ end )
 
 local convarRange = CreateClientConVar( "proximity_voice_range", "1000", true, true, "Proximity voice range (500-2500)", 500, 2500 )
 cvars.AddChangeCallback( "proximity_voice_range", function( name, old, new )
-    net.Start( "proximity_voice_range_changed" )
-        net.WriteInt( new, 13 )
-    net.SendToServer()
+    timer.Create( "cfc_proximity_range_write", 0.5, 1, function()
+        net.Start( "proximity_voice_range_changed" )
+            net.WriteInt( new, 13 )
+        net.SendToServer()
+    end )
 end )
 
 hook.Add( "AddToolMenuCategories", "CFC_OptionalAddons_AddMenuCategory", function()
