@@ -1,8 +1,7 @@
-local forceLocalVoiceConvar = CreateConVar("force_proximity_voice", "0", 0,
-                                           "force everyone to use local voice")
+local forceLocalVoiceConvar = CreateConVar( "force_proximity_voice", "0", 0, "force everyone to use local voice" )
 forceLocalVoice = forceLocalVoiceConvar:GetBool()
 
-cvars.AddChangeCallback("force_proximity_voice", function(convarName, valueOld, valueNew)
+cvars.AddChangeCallback( "force_proximity_voice", function(convarName, valueOld, valueNew)
     forceLocalVoice = forceLocalVoiceConvar:GetBool()
     if forceLocalVoice then
         msg = "Forced proximity voice enabled!"
@@ -13,12 +12,15 @@ cvars.AddChangeCallback("force_proximity_voice", function(convarName, valueOld, 
     for _, ply in ipairs( player.GetAll() ) do
         ply:ChatPrint( msg )
     end
-end, "force_proximity_voice_callback")
+end, "force_proximity_voice_callback" )
 
 local config = {
     CHAT_DISTANCE = 1000,
     VOICE_3D = true
 }
+
+local CHAT_DISTANCESQ = config.CHAT_DISTANCE ^ 2
+local VOICE_3D = config.VOICE_3D
 
 local playerConfig = {}
 local playerConfigOverride = {}
@@ -31,7 +33,7 @@ local function canHear( listener, speaker )
     local speakerPos = speaker:GetPos()
     local listenerPos = listener:GetPos()
 
-    if listenerPos:DistToSqr( speakerPos ) > config.CHAT_DISTANCE ^ 2 then
+    if listenerPos:DistToSqr( speakerPos ) > CHAT_DISTANCESQ then
         return false
     end
 
@@ -49,7 +51,7 @@ hook.Add( "PlayerCanHearPlayersVoice", "CFC_ToggleLocalVoice_CanHear", function(
     local shouldUseLocal = forceLocalVoice or playerConfig[listener] or playerConfig[speaker] or playerConfigOverride[listener] or playerConfigOverride[speaker]
     if not shouldUseLocal then return end
 
-    return canHear( listener, speaker ), config.VOICE_3D
+    return canHear( listener, speaker ), VOICE_3D
 end, HOOK_LOW )
 
 hook.Add( "PlayerDisconnected", "CFC_ProximityVoice_CleanupTables", function(ply)
