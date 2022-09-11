@@ -12,7 +12,7 @@ local function populatePanel( form )
 end
 
 hook.Add( "AddToolMenuCategories", "CFC_OptionalAddons_AddMenuCategory", function()
-    spawnmenu.AddToolCategory( "Options", "CFC", "Proximity Voice" )
+    spawnmenu.AddToolCategory( "Options", "CFC", "CFC" )
 end )
 
 hook.Add( "PopulateToolMenu", "CFC_OptionalAddons_CreateOptionsMenu", function()
