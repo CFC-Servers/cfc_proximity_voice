@@ -11,11 +11,11 @@ local function populatePanel( form )
     checkbox:SetChecked( convar:GetBool() )
 end
 
-hook.Add( "AddToolMenuCategories", "CFC_OptionalAddons_AddMenuCategory", function()
+hook.Add( "AddToolMenuCategories", "CFC_ProximityVoice_AddMenuCategory", function()
     spawnmenu.AddToolCategory( "Options", "CFC", "CFC" )
 end )
 
-hook.Add( "PopulateToolMenu", "CFC_OptionalAddons_CreateOptionsMenu", function()
+hook.Add( "PopulateToolMenu", "CFC_ProximityVoice_CreateOptionsMenu", function()
     spawnmenu.AddToolMenuOption( "Options", "CFC", "proximity_voice", "Proximity Voice", "", "", function( panel )
         populatePanel( panel )
     end )
