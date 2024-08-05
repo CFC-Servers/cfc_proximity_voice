@@ -48,7 +48,7 @@ function ProximityVoiceOverridePlayerConfig( ply, enabled )
 end
 
 hook.Add( "PlayerCanHearPlayersVoice", "CFC_ToggleLocalVoice_CanHear", function( listener, speaker )
-    local shouldUseLocal = forceLocalVoice or playerConfig[listener] or playerConfig[speaker] or playerConfigOverride[listener] or playerConfigOverride[speaker]
+    local shouldUseLocal = forceLocalVoice or playerConfig[listener] == 1 or playerConfig[speaker] or playerConfigOverride[listener] or playerConfigOverride[speaker]
     if not shouldUseLocal then return end
 
     return canHear( listener, speaker ), VOICE_3D
@@ -61,6 +61,9 @@ end )
 
 util.AddNetworkString( "proximity_voice_enabled_changed" )
 net.Receive( "proximity_voice_enabled_changed", function( _, ply )
-    local enabled = net.ReadBool()
-    playerConfig[ply] = enabled or nil
+    local enabled, transmitOnly = net.ReadBool(), nil
+    if enabled then
+        transmitOnly = net.ReadBool()
+    end
+    playerConfig[ply] = enabled and ( transmitOnly and 2 or 1 ) or nil
 end )
