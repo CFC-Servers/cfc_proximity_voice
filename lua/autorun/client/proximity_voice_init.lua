@@ -12,7 +12,7 @@ cvars.AddChangeCallback( "proximity_voice_transmit_only", function( _, _, new )
     local enabled = proximityEnabled:GetBool()
     if not enabled then return end
     net.Start( "proximity_voice_enabled_changed" )
-        net.WriteBool( proximityEnabled:GetBool() )
+        net.WriteBool( enabled )
         net.WriteBool( tobool( new ) )
     net.SendToServer()
 end )
