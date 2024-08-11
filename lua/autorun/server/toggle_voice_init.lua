@@ -14,6 +14,8 @@ cvars.AddChangeCallback( "force_proximity_voice", function( _, _, _ )
     end
 end, "force_proximity_voice_callback" )
 
+local TRANSMIT_RECEIVE = 1
+local TRANSMIT_ONLY = 2
 local config = {
     CHAT_DISTANCE = 1000,
     VOICE_3D = true
@@ -48,7 +50,7 @@ function ProximityVoiceOverridePlayerConfig( ply, enabled )
 end
 
 hook.Add( "PlayerCanHearPlayersVoice", "CFC_ToggleLocalVoice_CanHear", function( listener, speaker )
-    local shouldUseLocal = forceLocalVoice or playerConfig[listener] or playerConfig[speaker] or playerConfigOverride[listener] or playerConfigOverride[speaker]
+    local shouldUseLocal = forceLocalVoice or playerConfig[listener] == TRANSMIT_RECEIVE or playerConfig[speaker] or playerConfigOverride[listener] or playerConfigOverride[speaker]
     if not shouldUseLocal then return end
 
     return canHear( listener, speaker ), VOICE_3D
@@ -62,5 +64,11 @@ end )
 util.AddNetworkString( "proximity_voice_enabled_changed" )
 net.Receive( "proximity_voice_enabled_changed", function( _, ply )
     local enabled = net.ReadBool()
-    playerConfig[ply] = enabled or nil
+    if not enabled then
+        playerConfig[ply] = nil
+    elseif net.ReadBool() then
+        playerConfig[ply] = TRANSMIT_ONLY
+    else
+        playerConfig[ply] = TRANSMIT_RECEIVE
+    end
 end )
