@@ -1,8 +1,9 @@
 local proximityEnabled = CreateClientConVar( "proximity_voice_enabled", "0", true, true )
 local transmitOnly = CreateClientConVar( "proximity_voice_transmit_only", "0", true, true )
 cvars.AddChangeCallback( "proximity_voice_enabled", function( _, _, new )
+    new = tobool( tonumber( new ) )
     net.Start( "proximity_voice_enabled_changed" )
-        net.WriteBool( tobool( new ) )
+        net.WriteBool( new )
         if new then
             net.WriteBool( transmitOnly:GetBool() )
         end
