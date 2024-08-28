@@ -53,7 +53,9 @@ hook.Add( "PlayerCanHearPlayersVoice", "CFC_ToggleLocalVoice_CanHear", function(
     local shouldUseLocal = forceLocalVoice or playerConfig[listener] == TRANSMIT_RECEIVE or playerConfig[speaker] or playerConfigOverride[listener] or playerConfigOverride[speaker]
     if not shouldUseLocal then return end
 
-    return canHear( listener, speaker ), VOICE_3D
+    if not canHear( listener, speaker ) then
+        return false, VOICE_3D
+    end
 end, HOOK_LOW )
 
 hook.Add( "PlayerDisconnected", "CFC_ProximityVoice_CleanupTables", function( ply )
