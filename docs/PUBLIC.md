@@ -1,6 +1,6 @@
 # Public API
 
-`lua/autorun/client/proximity_voice_public.lua`
+`lua/cfc_proximity_voice/client/proximity_voice_public.lua`
 
 ## `GetProximityVoiceMode( ply )`
 

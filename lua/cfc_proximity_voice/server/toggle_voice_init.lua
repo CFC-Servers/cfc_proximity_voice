@@ -32,13 +32,13 @@ local function updateNetworkedVoiceMode( ply )
     ply:SetNW2Int( NW2_PROXIMITY_VOICE_MODE, mode )
 end
 
-local function setPlayerConfig( ply, config )
-    playerConfig[ply] = config
+local function setPlayerConfig( ply, mode )
+    playerConfig[ply] = mode
     updateNetworkedVoiceMode( ply )
 end
 
-local function setPlayerConfigOverride( ply, config )
-    playerConfigOverride[ply] = config
+local function setPlayerConfigOverride( ply, mode )
+    playerConfigOverride[ply] = mode
     updateNetworkedVoiceMode( ply )
 end
 
