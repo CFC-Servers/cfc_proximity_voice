@@ -6,15 +6,15 @@ local function includeClient( file )
     end
 end
 
-local function includeShared( file )
-    includeClient( file )
-    include( file )
-end
-
 local function includeServer( file )
     if SERVER then
         include( file )
     end
+end
+
+local function includeShared( file )
+    includeClient( file )
+    includeServer( file )
 end
 
 includeShared( "cfc_proximity_voice/shared/proximity_voice_shared.lua" )
