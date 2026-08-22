@@ -1,4 +1,4 @@
-local forceLocalVoiceConvar = CreateConVar( "force_proximity_voice", "0", FCVAR_REPLICATED, "force everyone to use local voice" )
+local forceLocalVoiceConvar = GetConVar( "force_proximity_voice" )
 forceLocalVoice = forceLocalVoiceConvar:GetBool()
 
 cvars.AddChangeCallback( "force_proximity_voice", function( _, _, _ )
