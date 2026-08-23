@@ -1,4 +1,4 @@
-local forceLocalVoiceConvar = CreateConVar( "force_proximity_voice", "0", 0, "force everyone to use local voice" )
+local forceLocalVoiceConvar = GetConVar( "force_proximity_voice" )
 forceLocalVoice = forceLocalVoiceConvar:GetBool()
 
 cvars.AddChangeCallback( "force_proximity_voice", function( _, _, _ )
@@ -14,8 +14,6 @@ cvars.AddChangeCallback( "force_proximity_voice", function( _, _, _ )
     end
 end, "force_proximity_voice_callback" )
 
-local TRANSMIT_RECEIVE = 1
-local TRANSMIT_ONLY = 2
 local config = {
     CHAT_DISTANCE = 1000,
     VOICE_3D = true
@@ -26,6 +24,23 @@ local VOICE_3D = config.VOICE_3D
 
 local playerConfig = {}
 local playerConfigOverride = {}
+
+local function updateNetworkedVoiceMode( ply )
+    if not IsValid( ply ) then return end
+
+    local mode = playerConfigOverride[ply] and PROXIMITY_TRANSMIT_AND_RECEIVE or playerConfig[ply] or PROXIMITY_VOICE_DISABLED
+    ply:SetNW2Int( NW2_PROXIMITY_VOICE_MODE, mode )
+end
+
+local function setPlayerConfig( ply, mode )
+    playerConfig[ply] = mode
+    updateNetworkedVoiceMode( ply )
+end
+
+local function setPlayerConfigOverride( ply, mode )
+    playerConfigOverride[ply] = mode
+    updateNetworkedVoiceMode( ply )
+end
 
 local function canHear( listener, speaker )
     if not listener:Alive() or not speaker:Alive() then
@@ -43,32 +58,32 @@ local function canHear( listener, speaker )
 end
 
 function ProximityVoiceOverridePlayerConfig( ply, enabled )
-    playerConfigOverride[ply] = enabled
+    setPlayerConfigOverride( ply, enabled )
     if not enabled then
-        playerConfigOverride[ply] = nil
+        setPlayerConfigOverride( ply, nil )
     end
 end
 
 hook.Add( "PlayerCanHearPlayersVoice", "CFC_ToggleLocalVoice_CanHear", function( listener, speaker )
-    local shouldUseLocal = forceLocalVoice or playerConfig[listener] == TRANSMIT_RECEIVE or playerConfig[speaker] or playerConfigOverride[listener] or playerConfigOverride[speaker]
+    local shouldUseLocal = forceLocalVoice or playerConfig[listener] == PROXIMITY_TRANSMIT_AND_RECEIVE or playerConfig[speaker] or playerConfigOverride[listener] or playerConfigOverride[speaker]
     if not shouldUseLocal then return end
 
     return canHear( listener, speaker ), VOICE_3D
 end, HOOK_LOW )
 
 hook.Add( "PlayerDisconnected", "CFC_ProximityVoice_CleanupTables", function( ply )
-    playerConfig[ply] = nil
-    playerConfigOverride[ply] = nil
+    setPlayerConfig( ply, nil )
+    setPlayerConfigOverride( ply, nil )
 end )
 
 util.AddNetworkString( "proximity_voice_enabled_changed" )
 net.Receive( "proximity_voice_enabled_changed", function( _, ply )
     local enabled = net.ReadBool()
     if not enabled then
-        playerConfig[ply] = nil
+        setPlayerConfig( ply, nil )
     elseif net.ReadBool() then
-        playerConfig[ply] = TRANSMIT_ONLY
+        setPlayerConfig( ply, PROXIMITY_TRANSMIT_ONLY )
     else
-        playerConfig[ply] = TRANSMIT_RECEIVE
+        setPlayerConfig( ply, PROXIMITY_TRANSMIT_AND_RECEIVE )
     end
 end )
